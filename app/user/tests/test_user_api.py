@@ -82,7 +82,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_bad_credentials(self):
-        """Test returns error if crednetials invalid."""
+        """Test returns error if credentials invalid."""
         create_user(email="test@example.com", password="goodpass")
 
         payload = {"email": "test@example.com", "password": "badpass"}
@@ -139,7 +139,7 @@ class PrivateUserApiTests(TestCase):
 
     def test_update_user_profile(self):
         """Test updating the user profile for the authenticated user."""
-        payload = {"name": "Upadated name", "password": "newpassword123"}
+        payload = {"name": "Updated name", "password": "newpassword123"}
 
         res = self.client.patch(ME_URL, payload)
 
