@@ -78,7 +78,7 @@ class PrivateIngredientsApiTests(TestCase):
         self.assertEqual(res.data[0]["id"], ingredient.id)
 
     def test_update_ingredient(self):
-        """Test updating aningredient."""
+        """Test updating an ingredient."""
         ingredient = Ingredient.objects.create(user=self.user, name="Cilantro")
 
         payload = {"name": "Coriander"}
@@ -116,7 +116,7 @@ class PrivateIngredientsApiTests(TestCase):
         s1 = IngredientSerializer(in1)
         s2 = IngredientSerializer(in2)
         self.assertIn(s1.data, res.data)
-        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s2.data, res.data)
 
     def test_filtered_ingredients_unique(self):
         """Test filtered ingredients returns a unique list."""
