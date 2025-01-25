@@ -59,8 +59,10 @@ class PublicUserApiTests(TestCase):
             "name": "Test Name",
         }
         res = self.client.post(CREATE_USER_URL, payload)
-
-        user_exists = get_user_model().objects.filter(email=payload["email"]).exists()
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        user_exists = get_user_model().objects.filter(
+            email=payload["email"]
+        ).exists()
         self.assertFalse(user_exists)
 
     def test_create_token_for_user(self):
@@ -87,8 +89,14 @@ class PublicUserApiTests(TestCase):
 
         payload = {"email": "test@example.com", "password": "badpass"}
         res = self.client.post(TOKEN_URL, payload)
-
         self.assertNotIn("token", res.data)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_token_email_not_found(self):
+        """Test error returned if user not found for given email."""
+        payload = {'email': 'test@example.com', 'password': 'pass123'}
+        res = self.client.post(TOKEN_URL, payload)
+        self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_blank_password(self):
@@ -98,6 +106,9 @@ class PublicUserApiTests(TestCase):
 
         self.assertNotIn("token", res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
 
     def test_retrieve_user_unauthorized(self):
         """Test authentication is required for users"""
